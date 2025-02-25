@@ -1,9 +1,15 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def get_X_y(folder_path='dataset/'):
-    df_red = pd.read_csv(folder_path + 'winequality-red.csv').to_numpy()
-    df_white = pd.read_csv(folder_path + 'winequality-white.csv').to_numpy()
+    df_red = pd.read_csv(folder_path + 'winequality-red.csv')
+    df_white = pd.read_csv(folder_path + 'winequality-white.csv')
+    feature_names = df_red.columns[0].replace('"', '').split(';')
+    feature_names = ['Type'] + feature_names[:-1]
+    df_red = df_red.to_numpy()
+    df_white = df_white.to_numpy()
     Red = []
     White = []
     for red in df_red:
@@ -22,8 +28,22 @@ def get_X_y(folder_path='dataset/'):
     X = Wine[:, :-1]
     y = Wine[:, -1]
 
-    return X, y
+    return X, y, feature_names
 
 if __name__ == "__main__":
-    X, y = get_X_y()
-    print(X.shape, y.shape)
+    X, y, feature_names = get_X_y()
+    print(feature_names)
+    data = np.concatenate([X, y.reshape(-1, 1)], axis=1)
+    corr_matrix = np.corrcoef(data, rowvar=False)  # Correlation between columns
+
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap='coolwarm', square=True, cbar_kws={"shrink": .8})
+    plt.title("Pearson Correlation Heatmap of Wine Datasets")
+    plt.show()
+
+    target_corr = corr_matrix[:-1, -1]
+    highest_corr_index = np.argmax(np.abs(target_corr))
+    highest_corr_value = target_corr[highest_corr_index]
+
+    print(f"Feature with the highest absolute correlation with the target: {feature_names[highest_corr_index]}")
+    print(f"Correlation coefficient: {highest_corr_value:.4f}")
