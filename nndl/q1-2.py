@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
 
 def get_X_y(folder_path='dataset/'):
     df_red = pd.read_csv(folder_path + 'winequality-red.csv').to_numpy()
@@ -24,6 +26,19 @@ def get_X_y(folder_path='dataset/'):
 
     return X, y
 
+def standardize(X):
+    scaler = StandardScaler()
+    X_standardized = scaler.fit_transform(X)
+    return X_standardized
+
+
 if __name__ == "__main__":
     X, y = get_X_y()
     print(X.shape, y.shape)
+    X = standardize(X)
+    means = np.mean(X, axis=0)
+    stds = np.std(X, axis=0)
+    print("means of each feature\n", means)
+    print("variance of each feature:\n", stds)
+
+
