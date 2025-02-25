@@ -31,6 +31,8 @@ def get_X_y(folder_path='dataset/'):
     return X, y, feature_names
 
 if __name__ == "__main__":
+
+    # q1.1
     X, y, feature_names = get_X_y()
     print(feature_names)
     data = np.concatenate([X, y.reshape(-1, 1)], axis=1)
@@ -47,3 +49,29 @@ if __name__ == "__main__":
 
     print(f"Feature with the highest absolute correlation with the target: {feature_names[highest_corr_index]}")
     print(f"Correlation coefficient: {highest_corr_value:.4f}")
+
+    # q1.2
+    num_features = len(feature_names)
+    plt.figure(figsize=(16, 10))
+
+    for i in range(1, num_features): # discard the first feature 'Type'
+        plt.subplot(4, (num_features + 3) // 4, i)
+        plt.hist(data[:, i], bins=30, color='skyblue', edgecolor='black')
+        plt.title(feature_names[i])
+
+    plt.tight_layout(pad=3.0)
+    plt.show()
+
+    # q1.3
+    X_winetype = X[:, 0]
+    plt.figure(figsize=(8, 6))
+    plt.boxplot([y[X_winetype == 0], y[X_winetype == 1]],
+                labels=['White', 'Red'], patch_artist=True, 
+                boxprops=dict(facecolor='skyblue', color='blue'), 
+                medianprops=dict(color='red'))
+
+    # Add titles and labels
+    plt.title('Box Plot of Quality vs Wine Type')
+    plt.xlabel('Category')
+    plt.ylabel('Quality')
+    plt.show()
