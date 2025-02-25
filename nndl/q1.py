@@ -70,8 +70,14 @@ if __name__ == "__main__":
                 boxprops=dict(facecolor='skyblue', color='blue'), 
                 medianprops=dict(color='red'))
 
-    # Add titles and labels
     plt.title('Box Plot of Quality vs Wine Type')
     plt.xlabel('Category')
     plt.ylabel('Quality')
+    plt.show()
+
+    # q1.4
+    plt.hist(y, bins=10, color='skyblue', edgecolor='black')
+    plt.xlabel('Quality Score')
+    plt.ylabel('Frequency')
+    plt.title('Histogram of Quality Scores')
     plt.show()
