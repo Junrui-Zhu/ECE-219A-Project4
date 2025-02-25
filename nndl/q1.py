@@ -14,7 +14,7 @@ def get_X_y(folder_path='dataset/'):
         values = white[0].split(';')
         processed_values = [float(value) if '.' in value else int(value) for value in values]
         White.append(processed_values)
-    Type = np.concatenate([np.zeros(len(Red)), np.ones(len(White))], axis=0).reshape(-1, 1)
+    Type = np.concatenate([np.zeros(len(Red), dtype=int), np.ones(len(White), dtype=int)], axis=0).reshape(-1, 1)
     Red = np.array(Red)
     White = np.array(White)
     Wine = np.concatenate([Red, White], axis=0)
