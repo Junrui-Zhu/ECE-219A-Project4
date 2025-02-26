@@ -76,7 +76,7 @@ if __name__ == "__main__":
     plt.show()
 
     # q1.4
-    plt.hist(y, bins=10, color='skyblue', edgecolor='black')
+    plt.hist(y, bins=30, color='skyblue', edgecolor='black')
     plt.xlabel('Quality Score')
     plt.ylabel('Frequency')
     plt.title('Histogram of Quality Scores')
