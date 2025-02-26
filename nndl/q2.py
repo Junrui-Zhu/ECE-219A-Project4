@@ -18,9 +18,7 @@ def feature_selection_analysis(X, y, feature_names):
         'Mutual_Information': mi,
         'F_Score': f_scores
     }).sort_values(by='Mutual_Information')
-    print("\n", results)
-    print("\nlowest 2 MIs:\n", results.head(2))
-
+    
     return results
 
 if __name__ == "__main__":
@@ -32,6 +30,8 @@ if __name__ == "__main__":
     print("means of each feature\n", means)
     print("variance of each feature:\n", stds)
     results = feature_selection_analysis(X, y, feature_names)
+    print("\n", results)
+    print("\nlowest 2 MIs:\n", results.head(2))
 
     """
     To select features that yield better regression results, we employed two feature selection functions from sklearn:
