@@ -41,7 +41,7 @@ if __name__ == "__main__":
     stds = np.std(X, axis=0)
     print("means of each feature\n", means)
     print("variance of each feature:\n", stds)
-    results = feature_selection_analysis(X, y, feature_names)
+    results = feature_selection_analysis_a(X, y, feature_names)
     print("\n", results)
     print("\nlowest 2 MIs:\n", results.head(2))
 
