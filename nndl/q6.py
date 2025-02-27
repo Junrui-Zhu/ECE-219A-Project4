@@ -14,7 +14,7 @@ results = feature_selection_analysis_d(X, y, feature_names)
 top_features = results.index.to_list()[:5]  # Select top 5 features based on importance
 X= X[:, top_features]
 # Define hyperparameter search space (no more than 20 experiments)
-hidden_layer_sizes_list = [(10,), (20,), (10, 10), (20, 20), (10, 10, 10)]
+hidden_layer_sizes_list = [(10, 10), (15, 15), (20, 20), (25,25),(30, 30)]
 lr_list = [5e-2, 1e-2, 5e-3, 1e-3]
 
 # Prepare cross-validation
