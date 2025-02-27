@@ -74,7 +74,7 @@ plt.title("Feature Importance in Random Forest")
 plt.show()
 
 # Visualize a single tree in the random forest
-plt.figure(figsize=(12, 8))
-plot_tree(model.estimators_[0], feature_names=feature_names, filled=True, rounded=True, max_depth=4)
-plt.title("Visualization of a Single Tree (Max Depth = 4)")
+plt.figure(figsize=(16, 10))  # Increase figure size
+plot_tree(model.estimators_[0], feature_names=feature_names, filled=True, rounded=True, max_depth=4, fontsize=8, proportion=True)
+plt.title("Feature Names in a Single Decision Tree (Max Depth = 4)")
 plt.show()
