@@ -10,7 +10,9 @@ from q2 import standardize, feature_selection_analysis
 # Load and standardize the dataset (replace with actual dataset if available)
 X, y, feature_names = get_X_y()
 X = standardize(X)
-
+results = feature_selection_analysis(X, y, feature_names)
+top_features = results.index.to_list()[:5]  # Select top 5 features based on importance
+X= X[:, top_features]
 # Define hyperparameter search space (no more than 20 experiments)
 hidden_layer_sizes_list = [(10,), (20,), (10, 10), (20, 20), (10, 10, 10)]
 lr_list = [5e-2, 1e-2, 5e-3, 1e-3]
