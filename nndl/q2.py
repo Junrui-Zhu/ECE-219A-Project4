@@ -9,7 +9,7 @@ def standardize(X):
     X_standardized = scaler.fit_transform(X)
     return X_standardized
 
-def feature_selection_analysis(X, y, feature_names):
+def feature_selection_analysis_a(X, y, feature_names):
     mi = mutual_info_regression(X, y)
     f_scores, _ = f_regression(X, y)
 
@@ -21,6 +21,18 @@ def feature_selection_analysis(X, y, feature_names):
     
     return results
 
+def feature_selection_analysis_d(X, y, feature_names):
+    mi = mutual_info_regression(X, y)
+    f_scores, _ = f_regression(X, y)
+
+    results = pd.DataFrame({
+        'Feature': feature_names,
+        'Mutual_Information': mi,
+        'F_Score': f_scores
+    }).sort_values(by='Mutual_Information', ascending=False)
+    
+    return results
+
 if __name__ == "__main__":
     X, y, feature_names = get_X_y()
     print(X.shape, y.shape)
@@ -29,7 +41,7 @@ if __name__ == "__main__":
     stds = np.std(X, axis=0)
     print("means of each feature\n", means)
     print("variance of each feature:\n", stds)
-    results = feature_selection_analysis(X, y, feature_names)
+    results = feature_selection_analysis_a(X, y, feature_names)
     print("\n", results)
     print("\nlowest 2 MIs:\n", results.head(2))
 
