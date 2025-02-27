@@ -5,7 +5,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import Ridge
 from q1 import get_X_y
-from q2 import standardize, feature_selection_analysis
+from q2 import standardize, feature_selection_analysis_d
 
 if __name__ == '__main__':
 
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     X = standardize(X)  # Standardize features to have mean 0 and variance 1
     
     # Perform feature selection analysis and select the top 5 features
-    results = feature_selection_analysis(X, y, feature_names)
+    results = feature_selection_analysis_d(X, y, feature_names)
     top_features = results.index.to_list()[:5]  # Select top 5 features based on importance
     X_selected = X[:, top_features]  # Extract selected features
 

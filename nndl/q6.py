@@ -5,12 +5,12 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import StandardScaler
 from q1 import get_X_y
-from q2 import standardize, feature_selection_analysis
+from q2 import standardize, feature_selection_analysis_d
 
 # Load and standardize the dataset (replace with actual dataset if available)
 X, y, feature_names = get_X_y()
 X = standardize(X)
-results = feature_selection_analysis(X, y, feature_names)
+results = feature_selection_analysis_d(X, y, feature_names)
 top_features = results.index.to_list()[:5]  # Select top 5 features based on importance
 X= X[:, top_features]
 # Define hyperparameter search space (no more than 20 experiments)
