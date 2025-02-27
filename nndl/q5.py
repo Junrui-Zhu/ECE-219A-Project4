@@ -13,9 +13,9 @@ if __name__ == '__main__':
     X, y, feature_names = get_X_y()
     X = standardize(X)  # Standardize features to have mean 0 and variance 1
     
-    # Perform feature selection analysis and select the top 5 features
+    # Perform feature selection analysis and select the top 7 features
     results = feature_selection_analysis_d(X, y, feature_names)
-    top_features = results.index.to_list()[:5]  # Select top 5 features based on importance
+    top_features = results.index.to_list()[:7]  # Select top 7 features based on importance
     X_selected = X[:, top_features]  # Extract selected features
 
     # Set up 10-fold cross-validation

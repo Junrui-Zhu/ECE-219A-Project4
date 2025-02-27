@@ -12,7 +12,7 @@ from q2 import standardize, feature_selection_analysis_d
 X, y, feature_names = get_X_y()
 X = standardize(X)
 results = feature_selection_analysis_d(X, y, feature_names)
-top_features = results["Feature"].to_list()[:5]  # Select top 5 features based on importance
+top_features = results["Feature"].to_list()[:7]  # Select top 7 features based on importance
 print(top_features)
 # Define Random Forest hyperparameters
 n_estimators = 100  # Number of trees

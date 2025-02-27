@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     # Perform feature selection analysis and select the top 5 features
     results = feature_selection_analysis_d(X, y, feature_names)  # Corrected to get the best features
-    top_features = results.index.to_list()[:5]  # Select top 5 features based on importance
+    top_features = results.index.to_list()[:7]  # Select top 7 features based on importance
     X_selected = X[:, top_features]  # Extract selected features
 
     # Set up 10-fold cross-validation
@@ -64,6 +64,6 @@ if __name__ == '__main__':
     plt.bar(models.keys(), avg_train_rmse.values(), alpha=0.6, label='Train RMSE')
     plt.bar(models.keys(), avg_val_rmse.values(), alpha=0.6, label='Validation RMSE')
     plt.ylabel('RMSE')
-    plt.title('Linear Regression Performance (Top 5 Features)')
+    plt.title('Linear Regression Performance (Top 7 Features)')
     plt.legend()
     plt.show()
