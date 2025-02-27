@@ -4,70 +4,66 @@ from sklearn.model_selection import KFold
 from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression, Lasso, Ridge
 from q1 import get_X_y
-from q2 import standardize, feature_selection_analysis
+from q2 import standardize, feature_selection_analysis_d  # Corrected function to get the best 5 features
 
 if __name__ == '__main__':
 
-    # Load and preprocess Wine Quality dataset
+    # Load and preprocess the Wine Quality dataset
     X, y, feature_names = get_X_y()
-    X = standardize(X)
-    results = feature_selection_analysis(X, y, feature_names)
-    sorted_features = results.index.to_list()[::-1]
+    X = standardize(X)  # Standardize features to have mean 0 and variance 1
 
-    # Define cross-validation
+    # Perform feature selection analysis and select the top 5 features
+    results = feature_selection_analysis_d(X, y, feature_names)  # Corrected to get the best features
+    top_features = results.index.to_list()[:5]  # Select top 5 features based on importance
+    X_selected = X[:, top_features]  # Extract selected features
+
+    # Set up 10-fold cross-validation
     num_splits = 10
     kf = KFold(n_splits=num_splits, shuffle=True, random_state=42)
 
+    # Initialize dictionaries to store RMSE results
     train_rmse_dict = {'OLS': [], 'Lasso': [], 'Ridge': []}
     val_rmse_dict = {'OLS': [], 'Lasso': [], 'Ridge': []}
 
-    features_len_list = list(range(1, len(sorted_features)))
+    # Train models using only the top 5 selected features
+    for train_index, val_index in kf.split(X_selected):
+        X_train, X_val = X_selected[train_index], X_selected[val_index]
+        y_train, y_val = y[train_index], y[val_index]
 
-    for n in features_len_list:
-        selected_features = sorted_features[:n]
-        X_selected = X[:, selected_features]
+        # Define models
+        models = {
+            'OLS': LinearRegression(),
+            'Lasso': Lasso(alpha=0.1, random_state=42),
+            'Ridge': Ridge(alpha=1.0, random_state=42)
+        }
 
-        # Initialize RMSE storage
-        train_rmse_sum = {'OLS': 0, 'Lasso': 0, 'Ridge': 0}
-        val_rmse_sum = {'OLS': 0, 'Lasso': 0, 'Ridge': 0}
+        # Train each model and compute RMSE
+        for model_name, model in models.items():
+            model.fit(X_train, y_train)
 
-        for train_index, val_index in kf.split(X_selected):
-            X_train, X_val = X_selected[train_index], X_selected[val_index]
-            y_train, y_val = y[train_index], y[val_index]
-            
-            # Train models
-            models = {
-                'OLS': LinearRegression(),
-                'Lasso': Lasso(alpha=0.1, random_state=42),
-                'Ridge': Ridge(alpha=1.0, random_state=42)
-            }
+            # Predict and calculate RMSE
+            y_train_pred = model.predict(X_train)
+            y_val_pred = model.predict(X_val)
 
-            for model_name, model in models.items():
-                model.fit(X_train, y_train)
+            train_rmse = np.sqrt(mean_squared_error(y_train, y_train_pred))
+            val_rmse = np.sqrt(mean_squared_error(y_val, y_val_pred))
 
-                # Predict and calculate RMSE
-                y_train_pred = model.predict(X_train)
-                y_val_pred = model.predict(X_val)
+            train_rmse_dict[model_name].append(train_rmse)
+            val_rmse_dict[model_name].append(val_rmse)
 
-                train_rmse = np.sqrt(mean_squared_error(y_train, y_train_pred))
-                val_rmse = np.sqrt(mean_squared_error(y_val, y_val_pred))
+    # Compute average RMSE for each model
+    avg_train_rmse = {model: np.mean(train_rmse_dict[model]) for model in models.keys()}
+    avg_val_rmse = {model: np.mean(val_rmse_dict[model]) for model in models.keys()}
 
-                train_rmse_sum[model_name] += train_rmse
-                val_rmse_sum[model_name] += val_rmse
+    # Print results
+    for model in models.keys():
+        print(f"{model}: Train RMSE = {avg_train_rmse[model]:.4f}, Validation RMSE = {avg_val_rmse[model]:.4f}")
 
-        # Compute average RMSE
-        for model_name in models.keys():
-            train_rmse_dict[model_name].append(train_rmse_sum[model_name] / num_splits)
-            val_rmse_dict[model_name].append(val_rmse_sum[model_name] / num_splits)
-
-    # Plot results
+    # Plot RMSE comparison
     plt.figure(figsize=(8, 5))
-    for model_name in models.keys():
-        plt.plot(features_len_list, train_rmse_dict[model_name], label=f'Train {model_name}')
-        plt.plot(features_len_list, val_rmse_dict[model_name], linestyle='dashed', label=f'Val {model_name}')
-
-    plt.xlabel('Number of Features')
+    plt.bar(models.keys(), avg_train_rmse.values(), alpha=0.6, label='Train RMSE')
+    plt.bar(models.keys(), avg_val_rmse.values(), alpha=0.6, label='Validation RMSE')
     plt.ylabel('RMSE')
-    plt.title('RMSE Comparison: OLS, Lasso, Ridge Regression')
+    plt.title('Linear Regression Performance (Top 5 Features)')
     plt.legend()
     plt.show()
