@@ -46,15 +46,38 @@ for filename in os.listdir(folder_path):
         else:
             print(f"{filename} - no valid time stamp。")
 
+import matplotlib.pyplot as plt
+import pandas as pd
+
 if plot_data:
     plt.figure(figsize=(12, 6))
-    for filename, tweet_counts in plot_data.items():
-        plt.plot(tweet_counts.index, tweet_counts.values, label=filename.replace(".txt", ""))
-    
-    plt.xlabel("Time (Hourly)")
+    all_time_indices = set()
+    for tweet_counts in plot_data.values():
+        all_time_indices.update(tweet_counts.index)
+
+    all_time_indices = sorted(all_time_indices) 
+    all_time_series = pd.Series(all_time_indices)
+
+    num_files = len(plot_data)
+    bar_width = 0.8 / num_files  
+    positions = range(len(all_time_indices)) 
+
+    for i, (filename, tweet_counts) in enumerate(plot_data.items()):
+        tweet_counts = tweet_counts.reindex(all_time_series, fill_value=0)
+        plt.bar(
+            [p + i * bar_width for p in positions], 
+            tweet_counts.values, 
+            width=bar_width, 
+            label=filename.replace(".txt", "")
+        )
+
+    plt.xlabel("Time (Daily)")
     plt.ylabel("Number of Tweets")
     plt.title("Number of Tweets per Hour for NFL and SuperBowl")
     plt.legend()
-    plt.xticks(rotation=45)
-    plt.grid(True)
+    tick_positions = [p for p, t in enumerate(all_time_indices) if t.hour == 0]
+    tick_labels = [all_time_indices[p].strftime('%Y-%m-%d') for p in tick_positions]
+
+    plt.xticks(tick_positions, tick_labels, rotation=45)  
+    plt.grid(axis="y", linestyle="--", alpha=0.7)  
     plt.show()
