@@ -4,6 +4,7 @@
 # from langdetect import detect
 # from tqdm import tqdm
 # from rapidfuzz import fuzz
+# from langdetect import detect
 
 # # 品牌别名字典
 # BRAND_ALIASES = {
@@ -26,7 +27,9 @@
 #     "Victoria's Secret": ["Victoria's Secret"],
 #     "Fiat": ["Fiat"],
 #     "Toyota": ["Toyota"],
-#     "Pepsi": ["Pepsi"]
+#     "Pepsi": ["Pepsi"],
+#     "Loctite":["Loctite"],
+#     "Nationwide":["Nationwide"]
 # }
 
 # # 计算文本是否包含品牌
@@ -41,7 +44,15 @@
 #                 break  # 一个别名匹配成功就跳过
 
 #     return list(detected_brands)
-
+# def detect_language(text):
+#     try:
+#         lang = detect(text)
+#         if lang == 'es':
+#             return "Spanish"
+#         else:
+#             return "English"
+#     except:
+#         return "Error in detection"
 # # 处理单个文件
 
 # def process_tweets(file_path):
@@ -57,12 +68,14 @@
 #                 retweet_count = tweet_data.get("tweet", {}).get("retweet_count", 0)
 #                 user = tweet_data.get("tweet", {}).get("")
 #                 mentioned_brands = detect_brands(tweet_text)
+#                 language = detect_language(tweet_text)
 #                 if mentioned_brands:
 #                     results.append({
 #                         "text": tweet_text,
 #                         "brands": mentioned_brands,
 #                         "likes": favorite_count,
 #                         "retweets": retweet_count
+#                         "language": language
 #                     })
 
 #             except json.JSONDecodeError:
@@ -98,7 +111,7 @@ from tqdm import tqdm
 from rapidfuzz import fuzz
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-
+from langdetect import detect
 # 加载预训练 word2vec 模型
 #api.BASE_DIR = "D:/ECE219_tweet_data"
 #word_vectors = api.load("word2vec-google-news-300")
@@ -125,6 +138,8 @@ BRAND_ALIASES = {
     "Fiat": ["Fiat"],
     "Toyota": ["Toyota"],
     "Pepsi": ["Pepsi"],
+    "Loctite":["Loctite"],
+    "Nationwide":["Nationwide"]
 }
 
 # 计算文本是否包含品牌（基于 word2vec 语义匹配）
@@ -150,9 +165,19 @@ def detect_brands(tweet_text):
                         detected_brands.add(brand)
                         break
             except KeyError:
-                continue  # 忽略 OOV（超出词表）的词
+                continue  
 
     return list(detected_brands)
+
+def detect_language(text):
+    try:
+        lang = detect(text)
+        if lang == 'es':
+            return "Spanish"
+        else:
+            return "English"
+    except:
+        return "Error in detection"
 
 # 处理单个文件
 def process_tweets(file_path):
@@ -166,18 +191,19 @@ def process_tweets(file_path):
                 tweet_text = tweet_data.get("tweet", {}).get("text", "").lower()
                 favorite_count = tweet_data.get("tweet", {}).get("favorite_count", 0)
                 retweet_count = tweet_data.get("tweet", {}).get("retweet_count", 0)
-
+                language = detect_language(tweet_text)
                 mentioned_brands = detect_brands(tweet_text)
                 if mentioned_brands:
                     results.append({
                         "text": tweet_text,
                         "brands": mentioned_brands,
                         "likes": favorite_count,
-                        "retweets": retweet_count
+                        "retweets": retweet_count,
+                        "language": language
                     })
 
             except json.JSONDecodeError:
-                continue  # 跳过无法解析的行
+                continue  
 
     return results
 
