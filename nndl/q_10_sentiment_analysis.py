@@ -38,5 +38,5 @@ if __name__ == '__main__':
     df["text"] = df["text"].apply(clean_tweet)
     df["brands"] = df["brands"].apply(string2list)
     df["sentiment_score"] = df["text"].apply(get_sentiment_score)
-    print(df.head(3))
+    df.to_csv('dataset/tweets_data_with_score.csv', index=False)
     
