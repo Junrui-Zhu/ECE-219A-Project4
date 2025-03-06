@@ -30,7 +30,7 @@ def get_sentiment_score(tweet):
     return TextBlob(tweet).sentiment.polarity
 
 if __name__ == '__main__':
-    df = pd.read_csv('dataset/tweets_data.csv')
+    df = pd.read_csv('dataset/tweets_data_brute.csv')
     brand_list = read_brand()
     brand2order = {}
     for i in range(len(brand_list)):
