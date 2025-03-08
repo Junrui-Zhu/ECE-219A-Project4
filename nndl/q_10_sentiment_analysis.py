@@ -4,7 +4,8 @@ import nltk
 from nltk.corpus import stopwords
 from textblob import TextBlob
 import ast
-import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 nltk.download('stopwords')
 stop_words = set(stopwords.words('spanish')) | set(stopwords.words('english'))
@@ -39,4 +40,17 @@ if __name__ == '__main__':
     df["brands"] = df["brands"].apply(string2list)
     df["sentiment_score"] = df["text"].apply(get_sentiment_score)
     df.to_csv('dataset/tweets_data_with_score.csv', index=False)
+
+    # Plot the distribution
+    plt.figure(figsize=(8, 5))
+    sns.histplot(df['sentiment_score'], bins=20, kde=True, color='blue')
+
+    # Add labels and title
+    plt.xlabel('Sentiment Score')
+    plt.ylabel('Frequency')
+    plt.title('Distribution of Sentiment Scores')
+    plt.grid(True)
+
+    # Show the plot
+    plt.show()
     
