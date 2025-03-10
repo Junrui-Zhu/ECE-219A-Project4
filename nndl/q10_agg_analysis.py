@@ -52,7 +52,7 @@ sns.scatterplot(
 )
 
 for i in range(len(brand_stats)):
-    if brand_stats['cluster'][i] in [1, 2]:
+    if brand_stats['cluster'][i] in [0,3]:
         plt.text(
             brand_stats['tweet_count'][i], 
             brand_stats['sentiment_score'][i], 
