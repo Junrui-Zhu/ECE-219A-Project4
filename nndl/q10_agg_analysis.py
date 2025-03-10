@@ -27,10 +27,13 @@ brand_stats['tweet_count'] = df.groupby('brands').size().values
 scaler = MinMaxScaler()
 features = ['tweet_count', 'likes', 'retweets', 'sentiment_score']
 brand_stats_scaled = brand_stats.copy()
-brand_stats_scaled[features] = scaler.fit_transform(brand_stats[features])  # 归一化
-
+brand_stats_scaled[features] = scaler.fit_transform(brand_stats[features])  
+brand_stats_scaled['sentiment_score'] =  brand_stats_scaled['sentiment_score']*3.5
+brand_stats_scaled['retweets'] =  brand_stats_scaled['retweets']*1.25
+brand_stats_scaled['likes'] =  brand_stats_scaled['likes']*1
+brand_stats_scaled['tweet_count'] =  brand_stats_scaled['tweet_count']*1.25
 # clustering
-cluster = AgglomerativeClustering(n_clusters=3)
+cluster = AgglomerativeClustering(n_clusters=4, linkage='ward')
 brand_stats_scaled['cluster'] = cluster.fit_predict(brand_stats_scaled[features])  # 预测聚类类别
 
 
