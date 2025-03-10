@@ -16,12 +16,12 @@ if __name__ == '__main__':
     np.random.seed(42)  # Fix random seed for reproducibility
     results = feature_selection_analysis_d(X, y, feature_names)
     
-    # ✅ Ensure exactly 7 features are selected
+    # Ensure 7 features are selected
     top_feature_indices = list(results.index[:7])  # Extract only the top 7 feature indices
     top_feature_names = [feature_names[i] for i in top_feature_indices]  # Get correct feature names
     X_selected = X[:, top_feature_indices]  # Select only those 7 features
 
-    # ✅ Print selected features (without intercept)
+    # Print selected features (without intercept)
     print("\nSelected Top 7 Features:")
     for i, feature in enumerate(top_feature_names, start=1):
         print(f"{i}. {feature}")
